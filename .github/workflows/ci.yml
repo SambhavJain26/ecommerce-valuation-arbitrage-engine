@@ -1,0 +1,34 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r Requirements.txt
+
+    - name: Compile and validate Python syntax
+      run: |
+        python -m compileall agents/ deal_agent_framework.py echoval.py log_utils.py
+
+    - name: Verify package imports
+      run: |
+        python -c "import pydantic, feedparser, bs4, requests, dotenv; print('Core dependencies verified successfully')"

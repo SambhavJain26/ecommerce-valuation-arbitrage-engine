@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Dict, Self
+from typing import List, Dict, Self, Optional
 from bs4 import BeautifulSoup
 import re
 import feedparser
@@ -9,16 +9,18 @@ import time
 
 feeds = [
     "https://www.dealnews.com/c142/Electronics/?rss=1",
-        "https://www.dealnews.com/c39/Computers/?rss=1",
-        "https://www.dealnews.com/c238/Automotive/?rss=1",
-        "https://www.dealnews.com/f1912/Smart-Home/?rss=1",
-        "https://www.dealnews.com/c196/Home-Garden/?rss=1",
-       ]
+    "https://www.dealnews.com/c39/Computers/?rss=1",
+    "https://www.dealnews.com/c238/Automotive/?rss=1",
+    "https://www.dealnews.com/f1912/Smart-Home/?rss=1",
+    "https://www.dealnews.com/c196/Home-Garden/?rss=1",
+]
 
 def extract(html_snippet: str) -> str:
     """
     Use Beautiful Soup to clean up this HTML snippet and extract useful text
     """
+    if not html_snippet:
+        return ""
     soup = BeautifulSoup(html_snippet, 'html.parser')
     snippet_div = soup.find('div', class_='snippet summary')
     
@@ -28,7 +30,7 @@ def extract(html_snippet: str) -> str:
         description = re.sub('<[^<]+?>', '', description)
         result = description.strip()
     else:
-        result = html_snippet
+        result = soup.get_text(strip=True)
     return result.replace('\n', ' ')
 
 class ScrapedDeal:
@@ -46,18 +48,34 @@ class ScrapedDeal:
         """
         Populate this instance based on the provided dict
         """
-        self.title = entry['title']
-        self.summary = extract(entry['summary'])
-        self.url = entry['links'][0]['href']
-        stuff = requests.get(self.url).content
-        soup = BeautifulSoup(stuff, 'html.parser')
-        content = soup.find('div', class_='content-section').get_text()
-        content = content.replace('\nmore', '').replace('\n', ' ')
-        if "Features" in content:
-            self.details, self.features = content.split("Features")
+        self.title = entry.get('title', 'Deal Listing')
+        self.summary = extract(entry.get('summary', ''))
+        links = entry.get('links', [])
+        self.url = links[0]['href'] if links and 'href' in links[0] else entry.get('link', '')
+        self.details = ""
+        self.features = ""
+
+        if self.url:
+            try:
+                headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+                resp = requests.get(self.url, headers=headers, timeout=10)
+                if resp.status_code == 200:
+                    soup = BeautifulSoup(resp.content, 'html.parser')
+                    content_sec = soup.find('div', class_='content-section')
+                    content = content_sec.get_text() if content_sec else ''
+                    content = content.replace('\nmore', '').replace('\n', ' ').strip()
+                    if "Features" in content:
+                        parts = content.split("Features", 1)
+                        self.details = parts[0].strip()
+                        self.features = parts[1].strip()
+                    else:
+                        self.details = content
+                else:
+                    self.details = self.summary
+            except Exception:
+                self.details = self.summary
         else:
-            self.details = content
-            self.features = ""
+            self.details = self.summary
 
     def __repr__(self):
         """
@@ -72,17 +90,23 @@ class ScrapedDeal:
         return f"Title: {self.title}\nDetails: {self.details.strip()}\nFeatures: {self.features.strip()}\nURL: {self.url}"
 
     @classmethod
-    def fetch(cls, show_progress : bool = False) -> List[Self]:
+    def fetch(cls, show_progress: bool = False) -> List[Self]:
         """
         Retrieve all deals from the selected RSS feeds
         """
         deals = []
         feed_iter = tqdm(feeds) if show_progress else feeds
         for feed_url in feed_iter:
-            feed = feedparser.parse(feed_url)
-            for entry in feed.entries[:10]:
-                deals.append(cls(entry))
-                time.sleep(0.5)
+            try:
+                feed = feedparser.parse(feed_url)
+                for entry in feed.entries[:5]:
+                    try:
+                        deals.append(cls(entry))
+                    except Exception:
+                        continue
+                    time.sleep(0.3)
+            except Exception:
+                continue
         return deals
 
 class Deal(BaseModel):
@@ -102,7 +126,7 @@ class DealSelection(BaseModel):
 class Opportunity(BaseModel):
     """
     A class to represent a possible opportunity: a Deal where we estimate
-    it should cost more than it's being offered
+    it should cost more than it is being offered
     """
     deal: Deal
     estimate: float

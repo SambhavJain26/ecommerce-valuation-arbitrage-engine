@@ -4,11 +4,8 @@ import logging
 import json
 from typing import List, Optional
 from dotenv import load_dotenv
-import chromadb
 from agents.planner import PlanningAgent
 from agents.deals import Opportunity
-from sklearn.manifold import TSNE
-import numpy as np
 
 
 # Colors for logging
@@ -17,8 +14,6 @@ WHITE = '\033[37m'
 RESET = '\033[0m'
 
 # Colors for plot
-CATEGORIES = ['Appliances', 'Automotive', 'Cell_Phones_and_Accessories', 'Electronics','Musical_Instruments', 'Office_Products', 'Tools_and_Home_Improvement', 'Toys_and_Games']
-COLORS = ['red', 'blue', 'brown', 'orange', 'yellow', 'green' , 'purple', 'cyan']
 
 def init_logging():
     root = logging.getLogger()

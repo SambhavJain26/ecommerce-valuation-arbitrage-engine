@@ -44,7 +44,9 @@ class ScannerAgent(Agent):
         Set up this instance by initializing OpenAI
         """
         self.log("Scanner Agent is initializing")
-        self.openai = OpenAI()
+        load_dotenv()
+        api_key = os.getenv('OPENAI_API_KEY')
+        self.openai = OpenAI(api_key=api_key)
         self.log("Scanner Agent is ready")
 
     def fetch_deals(self, memory) -> List[ScrapedDeal]:

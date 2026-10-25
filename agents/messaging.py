@@ -21,18 +21,22 @@ class MessagingAgent(Agent):
         or SMS via Twilio,
         whichever is specified in the constants
         """
+        from dotenv import load_dotenv
+        load_dotenv()
         self.log(f"Messaging Agent is initializing")
         if DO_TEXT:
-            account_sid = os.getenv('TWILIO_ACCOUNT_SID', 'your-sid-if-not-using-env')
-            auth_token = os.getenv('TWILIO_AUTH_TOKEN', 'your-auth-if-not-using-env')
-            self.me_from = os.getenv('TWILIO_FROM', 'your-phone-number-if-not-using-env')
-            self.me_to = os.getenv('MY_PHONE_NUMBER', 'your-phone-number-if-not-using-env')
-            # self.client = Client(account_sid, auth_token)
+            account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+            auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+            self.me_from = os.getenv('TWILIO_FROM')
+            self.me_to = os.getenv('MY_PHONE_NUMBER')
             self.log("Messaging Agent has initialized Twilio")
         if DO_PUSH:
             self.pushover_user = os.getenv('PUSHOVER_USER')
             self.pushover_token = os.getenv('PUSHOVER_TOKEN')
-            self.log("Messaging Agent has initialized Pushover")
+            if self.pushover_user and self.pushover_token:
+                self.log("Messaging Agent has initialized Pushover")
+            else:
+                self.log("Messaging Agent initialized in local simulation mode (no Pushover keys set)")
 
     def message(self, text):
         """
@@ -50,15 +54,22 @@ class MessagingAgent(Agent):
         Send a Push Notification using the Pushover API
         """
         self.log("Messaging Agent is sending a push notification")
-        conn = http.client.HTTPSConnection("api.pushover.net:443")
-        conn.request("POST", "/1/messages.json",
-          urllib.parse.urlencode({
-            "token": self.pushover_token,
-            "user": self.pushover_user,
-            "message": text,
-            "sound": "cashregister"
-          }), { "Content-type": "application/x-www-form-urlencoded" })
-        conn.getresponse()
+        if not self.pushover_user or not self.pushover_token:
+            self.log(f"[SIMULATED PUSH NOTIFICATION] {text}")
+            return
+        try:
+            conn = http.client.HTTPSConnection("api.pushover.net:443", timeout=10)
+            conn.request("POST", "/1/messages.json",
+              urllib.parse.urlencode({
+                "token": self.pushover_token,
+                "user": self.pushover_user,
+                "message": text,
+                "sound": "cashregister"
+              }), { "Content-type": "application/x-www-form-urlencoded" })
+            res = conn.getresponse()
+            self.log(f"Push notification dispatched (status {res.status})")
+        except Exception as e:
+            self.log(f"Push notification failed: {e}")
 
     def alert(self, opportunity: Opportunity):
         """

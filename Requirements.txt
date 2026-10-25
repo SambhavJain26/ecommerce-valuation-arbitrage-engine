@@ -1,17 +1,19 @@
-modal
-python-dotenv
-flask
-flask-socketio
-gradio
-nltk
-langchain
-langchain-openai
-langchain_chroma
-langchain[docarray]
-langchain_community
-pydantic
-gunicorn
-eventlet
-openai
-feedparser
+# EchoVal AI - Multi-Agent Deal Intelligence & Valuation Platform
+# Production & Local Testing Dependencies
 
+# Core Web & UI
+gradio>=4.40.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+feedparser>=6.0.11
+
+# Multi-Agent Coordination & AI Models
+openai>=1.30.0
+pydantic>=2.7.0
+python-dotenv>=1.0.0
+modal>=0.70.0
+
+# Scientific & Vector Utilities
+scikit-learn>=1.4.0
+numpy>=1.26.0
+tqdm>=4.66.0
