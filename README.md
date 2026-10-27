@@ -1,4 +1,4 @@
-# EchoVal AI: Autonomous Multi-Agent Deal Valuation Platform
+# Multi-Agent Valuation & Deal Arbitrage Pipeline
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Architecture](https://img.shields.io/badge/architecture-Multi--Agent%20System-orange.svg)](#system-architecture)

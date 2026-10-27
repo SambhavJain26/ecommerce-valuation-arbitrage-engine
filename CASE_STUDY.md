@@ -1,7 +1,8 @@
-# Case Study: EchoVal AI - Autonomous Multi-Agent Deal Intelligence & Real-Time Valuation System
+# Case Study: Multi-Agent Valuation & Deal Arbitrage Pipeline
 
 ## Project Hero
 
+- **Project Title**: Multi-Agent Valuation & Deal Arbitrage Pipeline
 - **Role**: Lead Systems Architect & Machine Learning Engineer
 - **Timeline**: 2-Week Sprint & Architecture Modernization
 - **Tools & Stack**: Python 3.11+, OpenAI API (Structured Outputs), Modal Cloud (Serverless GPU), Hugging Face, BitsAndBytes (4-bit NF4 QLoRA), BeautifulSoup4, Feedparser, Gradio, Pushover API, Twilio REST API
