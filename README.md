@@ -8,6 +8,8 @@
 
 EchoVal AI is an autonomous, multi-agent intelligence platform that continuously scans e-commerce feeds, extracts high-potential deals with structured LLM parsing, predicts authentic market value using a 4-bit QLoRA fine-tuned model deployed on Modal GPU infrastructure, and dispatches real-time mobile push notifications for verified arbitrage opportunities.
 
+![EchoVal AI Dashboard](docs/screenshots/01-dashboard-overview.png)
+
 ---
 
 ## The Problem Solved
@@ -73,6 +75,30 @@ EchoVal AI divides operational responsibilities across four purpose-built agents
 - **State Persistence & Deduplication**: All evaluated deals are tracked in `memory.json` to prevent duplicate scrapes, redundant LLM token spend, and notification spam.
 - **Defensive API Degradation**: The Messaging Agent checks credentials upfront and generates simulated log notifications in development environments when Pushover or Twilio keys are unconfigured.
 - **Interactive Gradio Dashboard**: Features real-time log streaming via custom queue handlers, an auto-updating opportunity table, and an interactive row selection handler for on-demand alert re-triggering.
+
+---
+
+## Visual Walkthrough & Dashboard Interface
+
+### 1. Mission Control Dashboard
+The Gradio web interface provides centralized controls for multi-agent execution, continuous feed polling, and manual deal dispatch.
+
+![EchoVal AI Dashboard](docs/screenshots/01-dashboard-overview.png)
+*Figure 1: Centralized control dashboard with execution controls and telemetry summary.*
+
+### 2. Qualified Opportunities & Live Agent Telemetry
+Displays real-time margin computations and live agent queue streaming.
+
+| Deal Opportunities Table | Real-Time Execution Logs |
+| :---: | :---: |
+| ![Deal Opportunities Table](docs/screenshots/02-deal-opportunities-table.png) | ![Real-Time Execution Logs](docs/screenshots/03-realtime-execution-logs.png) |
+| *Figure 2: Verified arbitrage deals exceeding \$50 margin* | *Figure 3: Multi-agent color-coded execution telemetry* |
+
+### 3. Mobile Viewport Triage
+Fully optimized for mobile triage and on-the-go deal verification.
+
+![Mobile Responsive View](docs/screenshots/04-mobile-responsive-view.png)
+*Figure 4: Mobile-responsive layout for fluid deal verification on handheld devices.*
 
 ---
 

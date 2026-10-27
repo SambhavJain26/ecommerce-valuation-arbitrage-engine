@@ -7,6 +7,9 @@
 - **Tools & Stack**: Python 3.11+, OpenAI API (Structured Outputs), Modal Cloud (Serverless GPU), Hugging Face, BitsAndBytes (4-bit NF4 QLoRA), BeautifulSoup4, Feedparser, Gradio, Pushover API, Twilio REST API
 - **Project Type**: Multi-Agent AI Automation & Production Inference Pipeline
 
+![EchoVal AI Dashboard](docs/screenshots/01-dashboard-overview.png)
+*Figure 1: EchoVal AI unified mission control dashboard demonstrating real-time opportunity discovery and agent telemetry.*
+
 ---
 
 ## Executive Summary & Impact
@@ -93,24 +96,29 @@ If the computed discount exceeds the \$50.00 threshold, the **Messaging Agent** 
 
 ## Visual Architecture & UI Walkthrough
 
-<!-- Placeholder: Hero Dashboard Overview -->
-### 1. Unified Mission Control
-The Gradio web interface provides a centralized control dashboard displaying live opportunity tables, active memory metrics, and real-time ANSI terminal logging.
+### 1. Unified Mission Control Dashboard
+The Gradio web interface provides a centralized control dashboard displaying live opportunity tables, active memory metrics, and real-time agent execution telemetry.
 
-```
-+-----------------------------------------------------------------------------------------+
-|                                    EchoVal AI Dashboard                                 |
-+------------------------------------------------------------+----------------------------+
-| Deals Found So Far | Listed Price | Estimate | Net Margin | Real-Time Telemetry Logs   |
-+--------------------+--------------+----------+------------+----------------------------+
-| Anker 737 PowerBank| $99.99       | $159.00  | +$59.01    | [Scanner] Ingested 5 feeds |
-| Dell 34" Curved WQ | $289.00      | $375.00  | +$86.00    | [Specialist] Valued SKU    |
-| TP-Link WiFi 6 Mesh| $149.99       | $180.00  | +$30.01    | [Planner] Gated Deal #1    |
-+------------------------------------------------------------+----------------------------+
-```
+![Dashboard Overview](docs/screenshots/01-dashboard-overview.png)
+*Figure 2: Unified mission control interface showing live system metrics, configuration controls, and real-time execution status.*
 
-### 2. Live Telemetry & Queue Streaming
-Using thread-safe `queue.Queue` handlers, background agent decisions stream directly to the web UI without blocking the Gradio rendering loop.
+### 2. Qualified Arbitrage Opportunities Table
+Displays verified deals that passed the strict \$50.00 discount margin threshold, complete with retailer asking price, model-estimated fair market valuation, and direct product checkout links.
+
+![Deal Opportunities Table](docs/screenshots/02-deal-opportunities-table.png)
+*Figure 3: Real-time opportunity table with computed margin differentials and interactive row selection.*
+
+### 3. Live Telemetry & Queue Streaming
+Using thread-safe `queue.Queue` handlers, background agent reasoning (DOM extraction, JSON parsing, RPC latency, and notification dispatch) streams directly to the browser without blocking the Gradio rendering loop.
+
+![Real-Time Execution Logs](docs/screenshots/03-realtime-execution-logs.png)
+*Figure 4: Color-coded terminal telemetry tracking concurrent agent operations across feed scanning and valuation.*
+
+### 4. Responsive Mobile Optimization
+Engineered for mobile deal monitoring, enabling instant verification and notification review on smartphone and tablet viewports.
+
+![Mobile Responsive View](docs/screenshots/04-mobile-responsive-view.png)
+*Figure 5: Mobile-responsive layout demonstrating fluid viewport adaptation for handheld triage.*
 
 ---
 
